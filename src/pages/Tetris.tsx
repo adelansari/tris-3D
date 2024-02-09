@@ -34,6 +34,23 @@ const pickRandomBlock = (): TetrisBlocksType => {
   return tetrisPool.pop()!;
 };
 
+const randomRotation = (blocks: Block[]): Block[] => {
+  for (let i = 0; i < 5; i++) {
+    const rotateTypes = Math.floor(Math.random() * 3);
+    switch (rotateTypes) {
+      case 0:
+        blocks = blocks.map((block) => ({ x: block.y, y: -block.x, z: block.z }));
+        break;
+      case 1:
+        blocks = blocks.map((block) => ({ x: -block.z, y: block.y, z: block.x }));
+        break;
+      default:
+        break;
+    }
+  }
+  return blocks;
+};
+
 const Tetris: React.FC = () => {
   return (
     <>
