@@ -1,5 +1,11 @@
 import { Html, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
+import React, { useEffect, useRef, useState } from "react";
+import { Vector3 } from "three";
+import { CameraUpdater } from "../components/CameraUpdater";
+import CoordinateAxes from "../components/CoordinateAxes";
+import { Block, DescendingBlock, TetrisBlock, TetrisBlocks, TetrisBlocksType } from "../components/Tetrimino";
+import TetrisBlocks from "../components/TetrisBlocks";
 import GitHubLogo from "../assets/github.svg";
 
 const Tetris: React.FC = () => {
@@ -35,18 +41,18 @@ const Tetris: React.FC = () => {
                   <strong>Rotate:</strong>
                   <ul>
                     <li>
-                      <strong>X-axis:</strong> Q
+                      <strong>X-axis:</strong> X
                     </li>
                     <li>
-                      <strong>Y-axis:</strong> E
+                      <strong>Y-axis:</strong> Y
                     </li>
                     <li>
-                      <strong>Z-axis:</strong> R
+                      <strong>Z-axis:</strong> Z
                     </li>
                   </ul>
                 </li>
                 <li>
-                  <strong>Hard Drop:</strong> <span>Space</span>
+                  <strong>Instant Drop:</strong> <span>Space</span>
                 </li>
               </ul>
             </Html>
