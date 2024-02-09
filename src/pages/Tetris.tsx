@@ -8,6 +8,32 @@ import { Block, DescendingBlock, TetrisBlock, TetrisBlocks, TetrisBlocksType } f
 import TetrisBlocks from "../components/TetrisBlocks";
 import GitHubLogo from "../assets/github.svg";
 
+let tetrisPool: TetrisBlocksType[] = [];
+
+// Generate random block types
+const randomizeArray = (array: TetrisBlocksType[]): TetrisBlocksType[] => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
+const addBlock = () => {
+  const tetriminos = Object.keys(TetrisBlocks) as TetrisBlocksType[];
+  for (let i = 0; i < 3; i++) {
+    tetrisPool.push(...tetriminos);
+  }
+  randomizeArray(tetrisPool);
+};
+
+const pickRandomBlock = (): TetrisBlocksType => {
+  if (tetrisPool.length === 0) {
+    addBlock();
+  }
+  return tetrisPool.pop()!;
+};
+
 const Tetris: React.FC = () => {
   return (
     <>
