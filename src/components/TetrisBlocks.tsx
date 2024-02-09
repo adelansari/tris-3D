@@ -2,7 +2,7 @@ import { Box } from "@react-three/drei";
 import React from "react";
 import { BoxGeometry } from "three";
 
-interface TetriminoProps {
+interface TetrisBlockProps {
   type: TetrisBlocksType;
   position: [number, number, number];
   blocks: Block[];
@@ -98,7 +98,7 @@ export const Cube: React.FC<{ position: Block; color: string }> = ({ position, c
   );
 };
 
-export const Tetrimino: React.FC<TetriminoProps> = ({ type, position, blocks, scale = 1 }) => {
+export const TetrisBlock: React.FC<TetrisBlockProps> = ({ type, position, blocks, scale = 1 }) => {
   const tetriminoColor = TetrisBlocks[type].color;
 
   return (
@@ -111,7 +111,7 @@ export const Tetrimino: React.FC<TetriminoProps> = ({ type, position, blocks, sc
   );
 };
 
-export const FallenCubes: React.FC<{ gridState: (string | null)[][][] }> = ({ gridState }) => {
+export const DescendingBlock: React.FC<{ gridState: (string | null)[][][] }> = ({ gridState }) => {
   const cubes = [];
 
   for (let x = 0; x < gridState.length; x++) {
