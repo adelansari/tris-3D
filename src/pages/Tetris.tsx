@@ -27,7 +27,7 @@ const addBlock = () => {
   randomizeArray(tetrisPool);
 };
 
-const pickRandomBlock = (): TetrisBlocksType => {
+const getRandomBlock = (): TetrisBlocksType => {
   if (tetrisPool.length === 0) {
     addBlock();
   }
@@ -49,6 +49,39 @@ const randomRotation = (blocks: Block[]): Block[] => {
     }
   }
   return blocks;
+};
+
+const getRandomPosition = (rotatedBlocks: Block[]): [number, number, number] => {
+  const bounds = getBounds(rotatedBlocks);
+
+  const xRange = 5 - (bounds.maxX - bounds.minX);
+  const zRange = 5 - (bounds.maxZ - bounds.minZ);
+
+  const x = Math.floor(Math.random() * xRange) - bounds.minX + 0.5;
+  const y = 11.5 - bounds.maxY;
+  const z = Math.floor(Math.random() * zRange) - bounds.minZ + 0.5;
+
+  return [x, y, z];
+};
+
+const getBounds = (blocks: Block[]) => {
+  let minX = Infinity,
+    maxX = -Infinity;
+  let minY = Infinity,
+    maxY = -Infinity;
+  let minZ = Infinity,
+    maxZ = -Infinity;
+
+  blocks.forEach((block) => {
+    minX = Math.min(minX, block.x);
+    maxX = Math.max(maxX, block.x);
+    minY = Math.min(minY, block.y);
+    maxY = Math.max(maxY, block.y);
+    minZ = Math.min(minZ, block.z);
+    maxZ = Math.max(maxZ, block.z);
+  });
+
+  return { minX, maxX, minY, maxY, minZ, maxZ };
 };
 
 const Tetris: React.FC = () => {
