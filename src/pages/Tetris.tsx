@@ -4,8 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Vector3 } from "three";
 import { CameraUpdater } from "../components/CameraUpdater";
 import CoordinateAxes from "../components/CoordinateAxes";
-import { Block, DescendingBlock, TetrisBlock, TetrisBlocks, TetrisBlocksType } from "../components/Tetrimino";
-import TetrisBlocks from "../components/TetrisBlocks";
+import { Block, DescendingBlock, TetrisBlock, TetrisBlocks, TetrisBlocksType } from "../components/TetrisBlocks";
+import GameGrids from "../components/GameGrids";
 import GitHubLogo from "../assets/github.svg";
 
 let tetrisPool: TetrisBlocksType[] = [];
