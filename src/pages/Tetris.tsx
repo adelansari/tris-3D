@@ -97,6 +97,8 @@ const Tetris: React.FC = () => {
 
   const controlsRef = useRef<any>(null);
 
+  const [cameraDirection, setCameraDirection] = React.useState(new Vector3());
+
   const [gridState, setGridState] = useState<(string | null)[][][]>(() => {
     const initialState = [];
     for (let i = 0; i < 6; i++) {
@@ -382,13 +384,42 @@ const Tetris: React.FC = () => {
       <div className="game-header">
         <h1 className="title-3d">3D Tetris</h1>
 
-        <div className="game-buttons-container"></div>
+        <div className="game-buttons-container">
+          <button type="button" onClick={gameStarted ? resetGame : startGame} className="button-3d button-3d-start">
+            {gameStarted ? "Quit" : "Start"}
+          </button>
+          <button type="button" onClick={togglePause} className={`button-3d button-3d-pause ${gameStarted && !gameOver ? "" : "hidden"}`}>
+            {isPaused ? "Continue" : "Pause"}
+          </button>
+        </div>
       </div>
 
       <div className="game-container">
+        {gameOver && (
+          <div className="game-over-container">
+            <h1>Game Over</h1>
+          </div>
+        )}
+
         <div className="game-canvas-left">
           <Canvas style={{ width: "100%", height: "100%" }}>
             <ambientLight intensity={2} />
+            <OrbitControls
+              ref={controlsRef}
+              target={[2, 6, 0]}
+              minDistance={20}
+              maxDistance={20}
+              minPolarAngle={0}
+              maxPolarAngle={Math.PI / 2}
+              minAzimuthAngle={0}
+              maxAzimuthAngle={Math.PI / 2}
+              enabled={!isPaused}
+            />
+            <CameraUpdater setDirection={setCameraDirection} />
+
+            <GameGrids />
+            {type && position && blocks && <TetrisBlock type={type} position={position} blocks={blocks} />}
+            <DescendingBlock gridState={gridState} />
           </Canvas>
         </div>
 
@@ -396,6 +427,18 @@ const Tetris: React.FC = () => {
           <Canvas style={{ width: "100%", height: "100%" }}>
             <ambientLight />
 
+            {nextType && (
+              <>
+                <Html position={[-0.75, 1.75, 0]} className="next-block-label">
+                  <h2>Next:</h2>
+                </Html>
+                <TetrisBlock type={nextType} position={[0.4, 1.6, 0]} blocks={TetrisBlocks[nextType].blocks} scale={0.15} />
+
+                <Html position={[-0.75, 0.75, 0]} className="score-label">
+                  <h2>Score: &nbsp; {score}</h2>
+                </Html>
+              </>
+            )}
             <Html position={[-0.85, 0.15, 0]} className="instructions-label">
               <ul>
                 <li>
@@ -405,21 +448,22 @@ const Tetris: React.FC = () => {
                   <strong>Rotate:</strong>
                   <ul>
                     <li>
-                      <strong>X-axis:</strong> X
+                      <strong>X-axis:</strong> Q
                     </li>
                     <li>
-                      <strong>Y-axis:</strong> Y
+                      <strong>Y-axis:</strong> E
                     </li>
                     <li>
-                      <strong>Z-axis:</strong> Z
+                      <strong>Z-axis:</strong> R
                     </li>
                   </ul>
                 </li>
                 <li>
-                  <strong>Instant Drop:</strong> <span>Space</span>
+                  <strong>Hard Drop:</strong> <span>Space</span>
                 </li>
               </ul>
             </Html>
+            <CoordinateAxes cameraDirection={cameraDirection} position={[0, -2, 0]} />
           </Canvas>
         </div>
       </div>
