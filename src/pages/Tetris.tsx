@@ -173,6 +173,32 @@ const Tetris: React.FC = () => {
     setIsPaused((prevIsPaused) => !prevIsPaused);
   };
 
+  const startDescend = () => {
+    if (!position || !blocks || !type) return;
+
+    if (isPaused || gameOver) return;
+
+    if (fallIntervalRef.current) {
+      clearInterval(fallIntervalRef.current);
+    }
+
+    fallIntervalRef.current = setInterval(() => {
+      let [x, y, z] = position;
+      let newY = y - 1;
+      const predictedBlocksPosition = blocks.map((block) => ({ x: block.x + x, y: block.y + newY, z: block.z + z }));
+
+      if (isValidPosition(predictedBlocksPosition)) {
+        setPosition([x, newY, z]);
+      } else {
+        addBlockToGrid(
+          blocks.map((block) => ({ x: block.x + x, y: block.y + y, z: block.z + z })),
+          Tetriminos[type].color
+        );
+        generateNewBlock();
+      }
+    }, 1000) as unknown as number;
+  };
+
   return (
     <>
       <div className="game-header">
