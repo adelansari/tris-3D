@@ -199,6 +199,20 @@ const Tetris: React.FC = () => {
     }, 1000) as unknown as number;
   };
 
+  const isValidPosition = (newBlocks: Block[]) => {
+    for (let { x, y, z } of newBlocks) {
+      x = Math.floor(x);
+      y = Math.floor(y);
+      z = Math.floor(z);
+
+      if (x < 0 || x >= 6 || z < 0 || z >= 6 || y < 0 || y >= 12 || gridState[x][z][y] !== null) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   return (
     <>
       <div className="game-header">
