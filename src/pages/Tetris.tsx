@@ -331,6 +331,35 @@ const Tetris: React.FC = () => {
     generateNewBlock();
   };
 
+  const isRowFull = (y: number): boolean => {
+    for (let x = 0; x < 6; x++) {
+      for (let z = 0; z < 6; z++) {
+        if (gridState[x][z][y] === null) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
+  const clearRow = (y: number) => {
+    const newGridState = [...gridState];
+    for (let i = y; i < 11; i++) {
+      for (let x = 0; x < 6; x++) {
+        for (let z = 0; z < 6; z++) {
+          newGridState[x][z][i] = newGridState[x][z][i + 1];
+        }
+      }
+    }
+    for (let x = 0; x < 6; x++) {
+      for (let z = 0; z < 6; z++) {
+        newGridState[x][z][11] = null;
+      }
+    }
+    setGridState(newGridState);
+    setScore((prevScore) => prevScore + 10);
+  };
+
   return (
     <>
       <div className="game-header">
