@@ -448,13 +448,13 @@ const Tetris: React.FC = () => {
                   <strong>Rotate:</strong>
                   <ul>
                     <li>
-                      <strong>X-axis:</strong> Q
+                      <strong>X-axis:</strong> X
                     </li>
                     <li>
-                      <strong>Y-axis:</strong> E
+                      <strong>Y-axis:</strong> Y
                     </li>
                     <li>
-                      <strong>Z-axis:</strong> R
+                      <strong>Z-axis:</strong> Z
                     </li>
                   </ul>
                 </li>
