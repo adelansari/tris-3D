@@ -85,10 +85,10 @@ const getBounds = (blocks: Block[]) => {
 };
 
 const Tetris: React.FC = () => {
-  const [type, setType] = useState<TetriminoType | null>(null);
+  const [type, setType] = useState<TetrisBlocksType | null>(null);
   const [position, setPosition] = useState<[number, number, number] | null>(null);
   const [blocks, setBlocks] = useState<Block[] | null>(null);
-  const [nextType, setNextType] = useState<TetriminoType | null>(null);
+  const [nextType, setNextType] = useState<TetrisBlocksType | null>(null);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -110,7 +110,6 @@ const Tetris: React.FC = () => {
     return initialState;
   });
 
-  // generating new block
   const generateNewBlock = () => {
     if (gameOver) return;
 
@@ -240,6 +239,96 @@ const Tetris: React.FC = () => {
         }
       }
     }
+  };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    // 如果游戏暂停，不执行任何操作
+    if (isPaused) return;
+
+    if (!position || !blocks) return;
+
+    let [x, y, z] = position;
+
+    let newBlocks = blocks;
+
+    const azimuthAngle = controlsRef.current?.getAzimuthalAngle() || 0;
+
+    switch (e.key.toUpperCase()) {
+      case "W":
+        if (azimuthAngle >= 0 && azimuthAngle < Math.PI / 4) {
+          z -= 1;
+        } else {
+          x -= 1;
+        }
+        break;
+      case "S":
+        if (azimuthAngle >= 0 && azimuthAngle < Math.PI / 4) {
+          z += 1;
+        } else {
+          x += 1;
+        }
+        break;
+      case "A":
+        if (azimuthAngle >= 0 && azimuthAngle < Math.PI / 4) {
+          x -= 1;
+        } else {
+          z += 1;
+        }
+        break;
+      case "D":
+        if (azimuthAngle >= 0 && azimuthAngle < Math.PI / 4) {
+          x += 1;
+        } else {
+          z -= 1;
+        }
+        break;
+      // 沿x轴旋转
+      case "X":
+        newBlocks = blocks.map((block) => ({ x: block.x, y: block.z, z: -block.y }));
+        break;
+      // 沿y轴旋转
+      case "Y":
+        newBlocks = blocks.map((block) => ({ x: -block.z, y: block.y, z: block.x }));
+        break;
+      //沿z轴旋转
+      case "Z":
+        newBlocks = blocks.map((block) => ({ x: block.y, y: -block.x, z: block.z }));
+        break;
+      case " ":
+        instantDescend();
+        return;
+      default:
+        break;
+    }
+
+    const newBlocksPosition = newBlocks.map((block) => ({ x: block.x + x, y: block.y + y, z: block.z + z }));
+    if (isValidPosition(newBlocksPosition)) {
+      setPosition([x, y, z]);
+      setBlocks(newBlocks);
+      startFall();
+    }
+  };
+
+  const instantDescend = () => {
+    if (gameOver) return;
+
+    if (!position || !blocks || !type) return;
+    let [x, y, z] = position;
+
+    while (true) {
+      let newY = y - 1;
+      const predictedBlocksPosition = blocks.map((block) => ({ x: block.x + x, y: block.y + newY, z: block.z + z }));
+      if (!isValidPosition(predictedBlocksPosition)) {
+        break;
+      }
+      y = newY;
+    }
+
+    addBlockToGrid(
+      blocks.map((block) => ({ x: block.x + x, y: block.y + y, z: block.z + z })),
+      TetrisBlocks[type].color
+    );
+    generateNewBlock();
   };
 
   return (
