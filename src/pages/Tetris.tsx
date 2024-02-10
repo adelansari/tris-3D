@@ -85,14 +85,98 @@ const getBounds = (blocks: Block[]) => {
 };
 
 const Tetris: React.FC = () => {
+  const [type, setType] = useState<TetriminoType | null>(null);
+  const [position, setPosition] = useState<[number, number, number] | null>(null);
+  const [blocks, setBlocks] = useState<Block[] | null>(null);
+  const [nextType, setNextType] = useState<TetriminoType | null>(null);
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
+  const fallIntervalRef = useRef<number | undefined>();
+
+  const controlsRef = useRef<any>(null);
+
+  const [gridState, setGridState] = useState<(string | null)[][][]>(() => {
+    const initialState = [];
+    for (let i = 0; i < 6; i++) {
+      const xLayer = [];
+      for (let j = 0; j < 6; j++) {
+        const yLayer = new Array(12).fill(null);
+        xLayer.push(yLayer);
+      }
+      initialState.push(xLayer);
+    }
+    return initialState;
+  });
+
+  // generating new block
+  const generateNewBlock = () => {
+    if (gameOver) return;
+
+    if (!nextType) return;
+    setType(nextType);
+
+    const newBlocks = randomRotation(TetrisBlocks[nextType].blocks);
+    const newPosition = getRandomPosition(newBlocks);
+
+    setBlocks(newBlocks);
+    setPosition(newPosition);
+    startDescend();
+
+    const newNextType = getRandomBlock();
+    setNextType(newNextType);
+  };
+
+  const startGame = () => {
+    setGameStarted(true);
+
+    const newType = getRandomBlock();
+    const newBlocks = randomRotation(TetrisBlocks[newType].blocks);
+    const newPosition = getRandomPosition(newBlocks);
+
+    setType(newType);
+    setBlocks(newBlocks);
+    setPosition(newPosition);
+    setNextType(getRandomBlock());
+
+    setIsPaused(false);
+  };
+
+  const resetGame = () => {
+    setType(null);
+    setBlocks(null);
+    setPosition(null);
+    setNextType(null);
+    setScore(0);
+
+    setGridState((prevState) => {
+      const newState = [...prevState];
+      for (let i = 0; i < 6; i++) {
+        for (let j = 0; j < 6; j++) {
+          newState[i][j].fill(null);
+        }
+      }
+      return newState;
+    });
+
+    setIsPaused(false);
+    setGameStarted(false);
+    setGameOver(false);
+
+    if (fallIntervalRef.current) {
+      clearInterval(fallIntervalRef.current);
+    }
+  };
+
+  const togglePause = () => {
+    setIsPaused((prevIsPaused) => !prevIsPaused);
+  };
+
   return (
     <>
       <div className="game-header">
-        <a href="https://github.com/adelansari/tris-3D" target="_blank" rel="noopener noreferrer">
-          <img src={GitHubLogo} alt="github" className="github-logo" />
-        </a>
-
-        <h1 className="title-3d">3D &nbsp;Tetris</h1>
+        <h1 className="title-3d">3D Tetris</h1>
 
         <div className="game-buttons-container"></div>
       </div>
@@ -135,6 +219,11 @@ const Tetris: React.FC = () => {
           </Canvas>
         </div>
       </div>
+      <footer>
+        <a href="https://github.com/adelansari/tris-3D" target="_blank" rel="noopener noreferrer">
+          <img src={GitHubLogo} alt="github" className="github-logo" />
+        </a>
+      </footer>
     </>
   );
 };
