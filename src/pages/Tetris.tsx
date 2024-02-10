@@ -192,7 +192,7 @@ const Tetris: React.FC = () => {
       } else {
         addBlockToGrid(
           blocks.map((block) => ({ x: block.x + x, y: block.y + y, z: block.z + z })),
-          Tetriminos[type].color
+          TetrisBlocks[type].color
         );
         generateNewBlock();
       }
@@ -211,6 +211,35 @@ const Tetris: React.FC = () => {
     }
 
     return true;
+  };
+
+  const addBlockToGrid = (blocksPosition: Block[], color: string) => {
+    const newGridState = [...gridState];
+
+    for (let block of blocksPosition) {
+      const x = Math.floor(block.x);
+      const y = Math.floor(block.y);
+      const z = Math.floor(block.z);
+      newGridState[x][z][y] = color;
+    }
+    setGridState(newGridState);
+
+    setScore((prevScore) => prevScore + 2);
+
+    for (let y = 0; y < 12; y++) {
+      if (isRowFull(y)) {
+        clearRow(y);
+      }
+    }
+
+    for (let x = 0; x < 6; x++) {
+      for (let z = 0; z < 6; z++) {
+        if (newGridState[x][z][11] !== null) {
+          setGameOver(true);
+          break;
+        }
+      }
+    }
   };
 
   return (
