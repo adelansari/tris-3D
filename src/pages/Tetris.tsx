@@ -242,7 +242,6 @@ const Tetris: React.FC = () => {
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    // 如果游戏暂停，不执行任何操作
     if (isPaused) return;
 
     if (!position || !blocks) return;
@@ -282,15 +281,12 @@ const Tetris: React.FC = () => {
           z -= 1;
         }
         break;
-      // 沿x轴旋转
       case "X":
         newBlocks = blocks.map((block) => ({ x: block.x, y: block.z, z: -block.y }));
         break;
-      // 沿y轴旋转
       case "Y":
         newBlocks = blocks.map((block) => ({ x: -block.z, y: block.y, z: block.x }));
         break;
-      //沿z轴旋转
       case "Z":
         newBlocks = blocks.map((block) => ({ x: block.y, y: -block.x, z: block.z }));
         break;
@@ -305,7 +301,7 @@ const Tetris: React.FC = () => {
     if (isValidPosition(newBlocksPosition)) {
       setPosition([x, y, z]);
       setBlocks(newBlocks);
-      startFall();
+      startDescend();
     }
   };
 
@@ -359,6 +355,27 @@ const Tetris: React.FC = () => {
     setGridState(newGridState);
     setScore((prevScore) => prevScore + 10);
   };
+
+  useEffect(() => {
+    const cleanupFall = () => {
+      if (fallIntervalRef.current) {
+        clearInterval(fallIntervalRef.current);
+      }
+    };
+
+    if (gameStarted && !isPaused) {
+      startDescend();
+      window.addEventListener("keydown", handleKeyDown);
+    } else {
+      cleanupFall();
+      window.removeEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      cleanupFall();
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [position, blocks, gameStarted, isPaused]);
 
   return (
     <>
