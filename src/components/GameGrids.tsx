@@ -1,7 +1,7 @@
 const GameGrids: React.FC = () => {
   const size = 6;
   const divisions = 6;
-  const color = "cyan";
+  const color = "gray";
 
   return (
     <group position={[0, 0, 0]}>
