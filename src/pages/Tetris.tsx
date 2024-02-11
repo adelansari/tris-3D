@@ -6,7 +6,6 @@ import { CameraUpdater } from "../components/CameraUpdater";
 import CoordinateAxes from "../components/CoordinateAxes";
 import { Block, DescendingBlock, TetrisBlock, TetrisBlocks, TetrisBlocksType } from "../components/TetrisBlocks";
 import GameGrids from "../components/GameGrids";
-import GitHubLogo from "../assets/github.svg";
 
 let tetrisPool: TetrisBlocksType[] = [];
 
@@ -467,9 +466,10 @@ const Tetris: React.FC = () => {
           </Canvas>
         </div>
       </div>
-      <footer>
-        <a href="https://github.com/adelansari/tris-3D" target="_blank" rel="noopener noreferrer">
-          <img src={GitHubLogo} alt="github" className="github-logo" />
+      <footer className="footer">
+        Github{" "}
+        <a href="https://github.com/adelansari/tris-3D" target="_blank" rel="noopener noreferrer" className="repo-link">
+          Repository
         </a>
       </footer>
     </>

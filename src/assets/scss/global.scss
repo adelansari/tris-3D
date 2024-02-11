@@ -10,9 +10,6 @@ $color-quit-btn-shadow: #27ae60;
 * {
     margin: 0;
     padding: 0;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
     font-family: Georgia;
 }
@@ -206,3 +203,16 @@ $color-quit-btn-shadow: #27ae60;
         text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
     }
 }
+
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .repo-link {
+    color: $color-start-btn
+  }
